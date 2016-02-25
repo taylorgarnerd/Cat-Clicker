@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<head>
+	<title>Cat Clicker</title>
+	<meta charset="utf-8" />
+	<link href="css/stylesheet.css" rel="stylesheet" />
+	<script src="Scripts/jquery-1.6.4.min.js"></script>
+</head>
+<body>
+	<div id="header">
+		<h1>You better click one of these damn cats!</h1>
+	</div>
+	<div id="cat-list">
+	</div>
+	<div id="cat-container">
+	</div>
+	<script type="text/javascript">
+		var cats = [
+			{name: "Jason",count:0,source:"img/mesmercat.png"},
+			{name: "Trina",count:0,source:"img/jumpcat.png"},
+			{name: "Kimberly",count:0,source:"img/starecat.png"},
+			{name: "Billy",count:0,source:"img/playcat.png"},
+			{name: "Zach",count:0,source:"img/runcat.png"}
+		];
+		var catList = document.getElementById('cat-list');
+		var litterBox = document.getElementById('cat-container');
+
+		var createCats = function(list) {
+
+			for (i = 0; i < list.length; i++) {
+				catBox = document.createElement('div');
+				header = document.createElement('h1');
+
+				catBox.className = "cat-button";
+				catBox.setAttribute('number',i);
+				header.innerHTML = list[i].name;
+
+				catBox.appendChild(header);
+				catList.appendChild(catBox);
+			}
+		}
+
+		createCats(cats);
+
+		$('.cat-button').click(function () {
+			var index = $(this).attr('number');
+			$('#cat-container').empty();
+
+			header = document.createElement('h1');
+			image = document.createElement('img');
+			countText = document.createElement('p');
+			count = document.createElement('p');
+
+			header.innerHTML = cats[index].name;
+			image.src = cats[index].source;
+			countText.innerHTML = "This is how many times you've clicked this damn cat";
+			count.innerHTML = cats[index].count;
+
+			litterBox.appendChild(header);
+			litterBox.appendChild(image);
+			litterBox.appendChild(countText);
+			litterBox.appendChild(count);
+
+			$('#cat-container img').click(function () {
+				cats[index].count++;
+				$('#cat-container p:eq(1)').text(cats[index].count);
+			});
+
+		});
+	</script>
+</body>

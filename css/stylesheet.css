@@ -1,0 +1,15 @@
+#cat-list {
+	position: absolute;
+	left: 0;
+}
+.cat-button {
+	border: 1px solid gray;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+#cat-container {
+	text-align: center;
+}
+#cat-container img {
+	max-height: 333px;
+}
