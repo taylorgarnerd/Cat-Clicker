@@ -32,11 +32,11 @@ $(function () {
 		},
 		clickCat: function () {
 			model.clicked();
-			containerView.render(model.getCurrentCat());
+			containerView.render();
 		},
 		changeCat: function (id) {
 			model.changeCurrentCat(id);
-			containerView.init();
+			containerView.render();
 		},
 		getCurrCat: function () {
 			return model.getCurrentCat();
@@ -53,8 +53,14 @@ $(function () {
 			this.catList = document.getElementById('cat-list');
 
 			listView.render();
+
+			$('.cat-button').click(function () {
+				var ID = $(this).attr('id');
+				octopus.changeCat(ID);
+			});
 		},
 		render: function () {
+			$(this.catList).empty();
 			var cats = octopus.getCats();
 
 			for (i = 0; i < cats.length; i++) {
@@ -68,42 +74,28 @@ $(function () {
 				catBox.appendChild(header);
 				this.catList.appendChild(catBox);
 			}
-
-			$('.cat-button').click(function () {
-				var ID = $(this).attr('id');
-				octopus.changeCat(ID);
-			});
 		},
 	};
 
 	var containerView = {
 		init: function () {
 			this.container = document.getElementById('cat-container');
-			var currCat = octopus.getCurrCat();
+			this.header = document.getElementById('cat-name');
+			this.image = document.getElementById('cat-image');
+			this.count = document.getElementById('cat-count');
 
-			containerView.render(currCat);
-		},
-		render: function (cat) {
-			$(this.container).empty();
+			containerView.render();
 
-			header = document.createElement('h1');
-			image = document.createElement('img');
-			countText = document.createElement('p');
-			count = document.createElement('p');
-
-			header.innerHTML = cat.name;
-			image.src = cat.source;
-			countText.innerHTML = "This is how many times you've clicked this damn cat";
-			count.innerHTML = cat.count;
-
-			this.container.appendChild(header);
-			this.container.appendChild(image);
-			this.container.appendChild(countText);
-			this.container.appendChild(count);
-
-			$('#cat-container img').click(function () {
+			$(this.image).click(function () {
 				octopus.clickCat();
 			});
+		},
+		render: function () {
+			var cat = octopus.getCurrCat();
+
+			this.header.textContent = cat.name;
+			this.image.src = cat.source;
+			this.count.textContent = cat.count;
 		},
 	};
 
