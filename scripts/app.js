@@ -23,6 +23,11 @@ $(function () {
 		},
 		clicked: function () {
 			this.currentCat.count++;
+		},
+		update: function (name,URL,clicks) {
+			this.currentCat.name = name;
+			this.currentCat.source = URL;
+			this.currentCat.count = clicks;
 		}
 	};
 
@@ -32,18 +37,26 @@ $(function () {
 		},
 		clickCat: function () {
 			model.clicked();
+			adminView.render();
 			containerView.render();
 		},
 		changeCat: function (id) {
 			model.changeCurrentCat(id);
+			adminView.render();
 			containerView.render();
 		},
 		getCurrCat: function () {
 			return model.getCurrentCat();
 		},
+		updateCat: function (name,URL,clicks) {
+			model.update(name,URL,clicks);
+			listView.render();
+			containerView.render();
+		},
 		init: function () {
 			model.init();
 			listView.init();
+			adminView.init();
 			containerView.init();
 		}
 	};
@@ -51,13 +64,11 @@ $(function () {
 	var listView = {
 		init: function () {
 			this.catList = document.getElementById('cat-list');
+			this.buttons = document.getElementsByClassName('cat-button');
+			console.log(this.buttons);
 
 			listView.render();
 
-			$('.cat-button').click(function () {
-				var ID = $(this).attr('id');
-				octopus.changeCat(ID);
-			});
 		},
 		render: function () {
 			$(this.catList).empty();
@@ -74,6 +85,11 @@ $(function () {
 				catBox.appendChild(header);
 				this.catList.appendChild(catBox);
 			}
+
+			$('.cat-button').click(function () {
+				var ID = $(this).attr('id');
+				octopus.changeCat(ID);
+			});
 		},
 	};
 
@@ -89,6 +105,7 @@ $(function () {
 			$(this.image).click(function () {
 				octopus.clickCat();
 			});
+
 		},
 		render: function () {
 			var cat = octopus.getCurrCat();
@@ -96,7 +113,38 @@ $(function () {
 			this.header.textContent = cat.name;
 			this.image.src = cat.source;
 			this.count.textContent = cat.count;
+		}
+	};
+
+	var adminView = {
+		init: function () {
+			this.admin = document.getElementById('admin');
+			this.adminButtons = document.getElementsByClassName('admin-buttons');
+			this.adminCancel = document.getElementById('admin-cancel');
+			this.adminForm = document.getElementById('admin-form');
+			this.adminCatName = document.getElementById('admin-cat-name');
+			this.adminCatURL = document.getElementById('admin-cat-url');
+			this.adminCatClicks = document.getElementById('admin-cat-clicks');
+			this.adminSubmit = document.getElementById('admin-submit');
+
+			adminView.render();
+			$(this.admin).hide();
+
+			$(this.adminButtons).click(function () {
+				$('#admin').toggle();
+			});
+
+			$(this.adminSubmit).click(function () {
+				octopus.updateCat($('#admin-cat-name').val(),$('#admin-cat-url').val(),$('#admin-cat-clicks').val());
+			});
 		},
+		render: function () {
+			var cat = octopus.getCurrCat();
+
+			this.adminCatName.value = cat.name;
+			this.adminCatURL.value = cat.source;
+			this.adminCatClicks.value = cat.count;
+		}
 	};
 
 	octopus.init();
